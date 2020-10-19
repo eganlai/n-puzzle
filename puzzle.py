@@ -2,7 +2,7 @@
 
 
 def LoadFromFile(filepath):
-	henrys_list = []
+	board_list = []
 	n = 0
 	with open(filepath, 'r') as f:
 		count = 0
@@ -11,26 +11,44 @@ def LoadFromFile(filepath):
 			if count == 0:
 				n = f
 			else:
-				dog = line.split("\t")
-				for item in dog:
+				row = line.split("\t")
+				for item in row:
 					if item == "*":
-						dog[item] = 0
+						line_list.append("0")
 					else:
-						dog[item] = int(dog[item])
-				henrys_list.append(line_list)
+						line_list.append(item)
+				board_list.append(line_list)
 			count+=1
-	return henrys_list
-
-		
+	return board_list
 
 
-def DebugPrint(teerons_list):
-	for i in teerons_list:
+def IfFileIsNotCoolAndEpic
+	pass
+
+def DebugPrint(state):
+	for i in state:
 		funny_dog_really_funny = ""
 		for j in i:
 			funny_dog_really_funny += j + "\t"
 		print(funny_dog_really_funny)
 
+def henrysdumbfunction(state):
+	Zero_Coord = []
+	for row in state:
+		for item in row:
+			if item == "0":
+				Zero_Coord.append(row)
+				Zero_Coord.appead(item)
+	return tuple(Zero_Coord)
+
+def ComputeNeighbors(state):
+	Zero_Coord = henrysdumbfunction(state)
+	n = len(state)
+
+	
+
+
+	return pairs
 
 
 DebugPrint(LoadFromFile("testcase.txt"))
