@@ -1,6 +1,4 @@
 
-
-
 def LoadFromFile(filepath):
 	board_list = []
 	n = 0
@@ -37,18 +35,32 @@ def henrysdumbfunction(state):
 	for row in state:
 		for item in row:
 			if item == "0":
-				Zero_Coord.append(row)
-				Zero_Coord.appead(item)
+				Zero_Coord.extend([row, item])
 	return tuple(Zero_Coord)
 
+def swap(state, ZeroCoords, SwapCoords):
+	copy = ZeroCoords
+	state[ZeroCoords[0]][ZeroCoords[1]] = state[SwapCoords[0]][SwapCoords[1]]
+	state[SwapCoords[0]][SwapCoords[1]] = state[copy[0]][copy[1]]
+	return state
+
 def ComputeNeighbors(state):
-	Zero_Coord = henrysdumbfunction(state)
-	n = len(state)
+	return_val = []
+	ZeroCoords = henrysdumbfunction(state)
+	#check above 
+	if int(ZeroCoords[0]) - 1 >= 0:
+		return_val.append([int(ZeroCoords[0]) - 1, swap(state, ZeroCoords, tuple(str(int(ZeroCoords[0]) - 1), ZeroCoords[1]))])
+	#below
+	if int(ZeroCoords[0]) + 1 <= len(state) -1:
+		return_val.append([int(ZeroCoords[0]) + 1, swap(state, ZeroCoords, tuple(str(int(ZeroCoords[0]) + 1), ZeroCoords[1]))])
+	#left
+	if int(ZeroCoords[1]) - 1 >= 0:
+	#HELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELP
+	#right
+	if int(ZeroCoords[1]) + 1 <= len(state) -1:
+	#HELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELP
 
-	
-
-
-	return pairs
+	return tuple(return_val)
 
 
 DebugPrint(LoadFromFile("testcase.txt"))
