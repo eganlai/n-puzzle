@@ -1,3 +1,4 @@
+import copy
 
 def LoadFromFile(filepath):
 	board_list = []
@@ -9,7 +10,7 @@ def LoadFromFile(filepath):
 			if count == 0:
 				n = f
 			else:
-				row = line.split("\t")
+				row = line.strip().split("\t")
 				for item in row:
 					if item == "*":
 						line_list.append("0")
@@ -32,39 +33,41 @@ def DebugPrint(state):
 		print(funny_dog_really_funny)
 
 def FindZeroCoord(state):
-	Zero_Coord = []
-	for row in state:
-		for item in row:
-			if item == "0":
-				Zero_Coord.extend([row, item])
-	return tuple(Zero_Coord)
+	for i in range(len(state)):
+		for j in range(len(state)):
+			if state[i][j] == "0":
+				return tuple([i, j])
 
+#CHANGE
 def swap(state, ZeroCoords, SwapCoords):
-	copy = ZeroCoords
-	state[ZeroCoords[0]][ZeroCoords[1]] = state[SwapCoords[0]][SwapCoords[1]]
-	state[SwapCoords[0]][SwapCoords[1]] = state[copy[0]][copy[1]]
-	return state
+	newState = copy.deepcopy(state)
+	zero_row, zero_col = ZeroCoords
+	swap_row, swap_col = SwapCoords
+	newState[zero_row][zero_col], newState[swap_row][swap_col] = newState[swap_row][swap_col], newState[zero_row][zero_col]
+	return newState
 
 
 def ComputeNeighbors(state):
 	return_val = []
 	ZeroCoords = FindZeroCoord(state)
+	print(ZeroCoords)
+	row,col = ZeroCoords
 	#check above 
-	if int(ZeroCoords[0]) - 1 >= 0:
-		return_val.append([int(ZeroCoords[0]) - 1, swap(state, ZeroCoords, tuple(str(int(ZeroCoords[0]) - 1), ZeroCoords[1]))])
+	if row - 1 >= 0:
+		return_val.append([state[row - 1][col], swap(state, ZeroCoords, (row - 1, col))])
 	#below
-	if int(ZeroCoords[0]) + 1 <= len(state) -1:
-		return_val.append([int(ZeroCoords[0]) + 1, swap(state, ZeroCoords, tuple(str(int(ZeroCoords[0]) + 1), ZeroCoords[1]))])
+	if row + 1 <= len(state) -1:
+		return_val.append([state[row + 1][col], swap(state, ZeroCoords, (row + 1, col))])
 	#left
-	if int(ZeroCoords[1]) - 1 >= 0:
-		return_val.append([])
+	if col - 1 >= 0:
+		return_val.append([state[row][col - 1], swap(state, ZeroCoords, (row, col - 1))])
 	#right
-	if int(ZeroCoords[1]) + 1 <= len(state) -1:
-	#HELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELPHELP
-
+	if col + 1 <= len(state) -1:
+		return_val.append([state[row][col + 1], swap(state, ZeroCoords, (row, col + 1))])
+	
 	return tuple(return_val)
 
 
 
 DebugPrint(LoadFromFile("testcase.txt"))
-print(computeNeighbors(LoadFromFile("testcase.txt")))
+print(ComputeNeighbors(LoadFromFile("testcase.txt")))
