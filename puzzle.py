@@ -67,19 +67,42 @@ def ComputeNeighbors(state):
 	
 	return tuple(return_val)
 
-def isGoal(state):
+def IsGoal(state):
 	index = 0
 	n = len(state)
 	for i in range(n):
 		for j in range(n):
-			print(int(state[i][j]))
+			# print(int(state[i][j]))
 			if not int(state[i][j]) == index + 1:
 				return False
 			if i == n-1 and j == n-2:
 				return True
 			index += 1
 
+def BFS(state):
+    frontier = [(0, state)]
+    discovered = set(state)
+    parents = {(0, state): None}
+    path = []
+    while len(frontier) != 0:
+        current_state = frontier.pop(0)
+        discovered.add(current_state[1])
+        if IsGoal(current_state[1]):
+            while parents.get((current_state[0], current_state[1])) != None:
+                path.insert(0, current_state[0])
+                current_state = parents.get((current_state[0], current_state[1]))
+            return path
+        for neighbor in ComputeNeighbors(current_state[1]):
+            if neighbor[1] not in discovered:
+                frontier.append(neighbor)
+                discovered.add(neighbor[1])
+                parents.update({(neighbor[0], neighbor[1]): current_state})
+    print("--FAIL--")
+    return None
 
-DebugPrint(LoadFromFile("testcase.txt"))					# TEST LoadFromFile
-print(ComputeNeighbors(LoadFromFile("testcase.txt")))		# TEST ComputeNeighbors
-print(isGoal(LoadFromFile("testcasetwo.txt")))				# TEST isGoal
+'''
+DebugPrint(LoadFromFile("testcasetwo.txt"))					# TEST LoadFromFile
+print(ComputeNeighbors(LoadFromFile("testcasetwo.txt")))		# TEST ComputeNeighbors
+print(IsGoal(LoadFromFile("testcasetwo.txt")))				# TEST isGoal
+'''
+print(BFS(LoadFromFile("testcasetwo.txt")))
