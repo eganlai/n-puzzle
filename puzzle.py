@@ -67,7 +67,19 @@ def ComputeNeighbors(state):
 	
 	return tuple(return_val)
 
+def isGoal(state):
+	index = 0
+	n = len(state)
+	for i in range(n):
+		for j in range(n):
+			print(int(state[i][j]))
+			if not int(state[i][j]) == index + 1:
+				return False
+			if i == n-1 and j == n-2:
+				return True
+			index += 1
 
 
-DebugPrint(LoadFromFile("testcase.txt"))
-print(ComputeNeighbors(LoadFromFile("testcase.txt")))
+DebugPrint(LoadFromFile("testcase.txt"))					# TEST LoadFromFile
+print(ComputeNeighbors(LoadFromFile("testcase.txt")))		# TEST ComputeNeighbors
+print(isGoal(LoadFromFile("testcasetwo.txt")))				# TEST isGoal
