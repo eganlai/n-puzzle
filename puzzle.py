@@ -20,13 +20,13 @@ def LoadFromFile(filepath):
 				board_list.append(tuple(line_list))
 			count+=1
 	return tuple(board_list)
-
+'''
 def timer(f):
 	start = time.time()
 		def g(x):
 	end = time.time()
 	return(end - start)
-
+'''
 def DebugPrint(state):
 	for i in state:
 		funny_dog_really_funny = ""
@@ -122,7 +122,15 @@ def DFS(state):
     return None
 
 def BidirectionalSearch(state):
-	pass
+	frontier = [(0, stage)]
+	backtier = [(0, target)]
+	discovered = set([state])
+	parents = {(0, state): None}
+	path = []
+
+	result = None
+	while result == None and len(frontier) !=0:
+		
 '''
 DebugPrint(LoadFromFile("testcasetwo.txt"))					# TEST LoadFromFile
 print(ComputeNeighbors(LoadFromFile("testcasetwo.txt")))		# TEST ComputeNeighbors
