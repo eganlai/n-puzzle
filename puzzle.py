@@ -78,6 +78,19 @@ def IsGoal(state):
 			if i == n-1 and j == n-2:
 				return True
 			index += 1
+def findEndState(n):
+	count = 1
+	End_state = []
+	for i in range(n):
+		for j in i:
+			End_state[i][j] = Str(count)
+			count+=1
+	return tuple(End_state)
+
+
+
+
+
 
 def BFS(state):
 	frontier = [(0, state)]
@@ -122,19 +135,66 @@ def DFS(state):
     return None
 
 def BidirectionalSearch(state):
-	frontier = [(0, stage)]
-	backtier = [(0, target)]
-	discovered = set([state])
+	EndState = findEndState(len(state))
+	frontier = [(0, state)]
+	frontier2 = [(0, EndState)]
+	discovered = set(state)
+	discovered2 = set(EndState)
 	parents = {(0, state): None}
-	path = []
+	parents2 = {(0, EndState): None}
+	current_state_backwards =
 
-	result = None
-	while result == None and len(frontier) !=0:
+
+	path = []
+	while len(frontier) != 0 or len(frontier2) != 0:
+		current_state = frontier.pop(0)
+		current_end_state = frontier2.pop(0)
+		discovered.add(current_state[1])
+		discovered2.add(current_end_state[1])
+		if current_state[1] in discovered2:
+			forwards = BackTrack(parents, current_state)
+			backwards = BackTrack(parents2, current__end_state)
+			return forwards + backwards
+		if current_end_state[1] in discovered:
+
+		for neighbor in ComputeNeighbors(current_state[1]):
+			if neighbor[1] not in discovered:
+			frontier.append(neighbor)
+			discovered.add(neighbor[1])
+			parents.update({(neighbor[0], neighbor[1]): current_state})
+
+		for neighbor in ComputeNeighbors(current_state[1]):
+			if neighbor[1] not in discovered:
+				frontier.append(neighbor)
+				discovered.add(neighbor[1])
+				parents.update({(neighbor[0], neighbor[1]): current_state})
 		
+
+			if neighbor[1] not in discovered:
+				frontier.append(neighbor)
+				discovered.add(neighbor[1])
+				parents.update({(neighbor[0], neighbor[1]): current_state})
+	print("--FAIL--")
+	return None
+
+def BackTrack(parents, state):
+	path = []
+	key = state
+	while key != None:
+		path.insert(0, key[0])
+		key = parents[key]
+	return path
+
+
+
+
+
+
+	
+
 '''
 DebugPrint(LoadFromFile("testcasetwo.txt"))					# TEST LoadFromFile
 print(ComputeNeighbors(LoadFromFile("testcasetwo.txt")))		# TEST ComputeNeighbors
 print(IsGoal(LoadFromFile("testcasetwo.txt")))				# TEST isGoal
 '''
 print(BFS(LoadFromFile("testcase.txt")))
-print(DFS(LoadFromFile("testcase.txt")))
