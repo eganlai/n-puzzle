@@ -78,13 +78,22 @@ def IsGoal(state):
 			if i == n-1 and j == n-2:
 				return True
 			index += 1
-def findEndState(n):
+
+
+def findGoal(n):
+	Total = n**2
 	count = 1
 	End_state = []
 	for i in range(n):
-		for j in i:
-			End_state[i][j] = Str(count)
+		row = []
+		for j in range(n):
+			if count == Total:
+				row.append("*")
+			else:
+				row.append(str(count))
 			count+=1
+		End_state.append(tuple(row))
+	
 	return tuple(End_state)
 
 
@@ -135,45 +144,43 @@ def DFS(state):
     return None
 
 def BidirectionalSearch(state):
-	EndState = findEndState(len(state))
+	Goal = findGoal(len(state))
 	frontier = [(0, state)]
-	frontier2 = [(0, EndState)]
+	frontier2 = [(0, Goal)]
 	discovered = set(state)
-	discovered2 = set(EndState)
+	discovered2 = set(Goal)
 	parents = {(0, state): None}
-	parents2 = {(0, EndState): None}
-	current_state_backwards =
-
-
+	parents2 = {(0, Goal): None}
+	BackState = goal
+	currentStateBackwards = BackState 
 	path = []
 	while len(frontier) != 0 or len(frontier2) != 0:
-		current_state = frontier.pop(0)
-		current_end_state = frontier2.pop(0)
-		discovered.add(current_state[1])
-		discovered2.add(current_end_state[1])
-		if current_state[1] in discovered2:
-			forwards = BackTrack(parents, current_state)
-			backwards = BackTrack(parents2, current__end_state)
+		currentState = frontier.pop(0)
+		currentEndState = frontier2.pop(0)
+		discovered.add(currentState[1])
+		discovered2.add(currentEndState[1])
+		if currentState[1] in discovered2:
+			forwards = BackTrack(parents, currentState)
+			backwards = BackTrack(parents2, currentEndState)
 			return forwards + backwards
-		if current_end_state[1] in discovered:
+		if currentEndState[1] in discovered:
+			forwards = BackTrack(parents, currentEndState)
+			backwards = BackTrack(parents2, currentState)
+			return forwards + backwards
 
-		for neighbor in ComputeNeighbors(current_state[1]):
-			if neighbor[1] not in discovered:
-			frontier.append(neighbor)
-			discovered.add(neighbor[1])
-			parents.update({(neighbor[0], neighbor[1]): current_state})
-
-		for neighbor in ComputeNeighbors(current_state[1]):
+		for neighbor in ComputeNeighbors(currentState[1]):
 			if neighbor[1] not in discovered:
 				frontier.append(neighbor)
 				discovered.add(neighbor[1])
-				parents.update({(neighbor[0], neighbor[1]): current_state})
+				parents.update({(neighbor[0], neighbor[1]): currentState})
+
+		for neighbor in ComputeNeighbors(currentEndState[1]):
+			if neighbor[1] not in discovered2:
+				currentStateBackwards.update(frontier2.pop[-1])
+				frontier2.append(neighbor)
+				discovered2.add(neighbor[1])
+				parents.update({(neighbor[0], neighbor[1]): currentEndState})
 		
-
-			if neighbor[1] not in discovered:
-				frontier.append(neighbor)
-				discovered.add(neighbor[1])
-				parents.update({(neighbor[0], neighbor[1]): current_state})
 	print("--FAIL--")
 	return None
 
@@ -185,16 +192,4 @@ def BackTrack(parents, state):
 		key = parents[key]
 	return path
 
-
-
-
-
-
-	
-
-'''
-DebugPrint(LoadFromFile("testcasetwo.txt"))					# TEST LoadFromFile
-print(ComputeNeighbors(LoadFromFile("testcasetwo.txt")))		# TEST ComputeNeighbors
-print(IsGoal(LoadFromFile("testcasetwo.txt")))				# TEST isGoal
-'''
-print(BFS(LoadFromFile("testcase.txt")))
+print(BidirectionalSearch(LoadFromFile("testcase.txt")))
