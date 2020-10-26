@@ -21,13 +21,7 @@ def LoadFromFile(filepath):
 				board_list.append(tuple(line_list))
 			count+=1
 	return tuple(board_list)
-'''
-def timer(f):
-	start = time.time()
-		def g(x):
-	end = time.time()
-	return(end - start)
-'''
+
 def DebugPrint(state):
 	for i in state:
 		funny_dog_really_funny = ""
