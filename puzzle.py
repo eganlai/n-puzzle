@@ -79,7 +79,7 @@ def IsGoal(state):
 			index += 1
 
 
-def findGoal(n):
+def FindGoal(n):
 	Total = n**2
 	count = 1
 	End_state = []
