@@ -141,7 +141,7 @@ def DFS(state):
 	return None
 
 def BidirectionalSearch(state):
-	Goal = findGoal(len(state))
+	Goal = FindGoal(len(state))
 	frontier = [(0, state)]
 	frontier2 = [(0, Goal)]
 	discovered = set([state])
