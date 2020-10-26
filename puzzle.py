@@ -1,5 +1,6 @@
 import copy
 import time
+import math
 
 def LoadFromFile(filepath):
 	board_list = []
@@ -68,6 +69,10 @@ def ComputeNeighbors(state):
 	
 	return return_val
 
+
+
+
+
 def IsGoal(state):
 	index = 0
 	n = len(state)
@@ -88,15 +93,13 @@ def findGoal(n):
 		row = []
 		for j in range(n):
 			if count == Total:
-				row.append("*")
+				row.append("0")
 			else:
 				row.append(str(count))
 			count+=1
 		End_state.append(tuple(row))
 	
 	return tuple(End_state)
-
-
 
 
 
@@ -123,73 +126,69 @@ def BFS(state):
 	return None
 
 def DFS(state):
-    frontier = [(0, state)]
-    discovered = set([state])
-    parents = {(0, state): None}
-    path = []
-    while len(frontier) != 0:
-        current_state = frontier.pop(0)
-        discovered.add(current_state[1])
-        if IsGoal(current_state[1]):
-            while parents.get((current_state[0], current_state[1])) != None:
-                path.insert(0, current_state[0])
-                current_state = parents.get((current_state[0], current_state[1]))
-            return path
-        for neighbor in ComputeNeighbors(current_state[1]):
-            if neighbor[1] not in discovered:
-                frontier.insert(0, neighbor)
-                discovered.add(neighbor[1])
-                parents.update({(neighbor[0], neighbor[1]): current_state})
-    print("--FAIL--")
-    return None
+	frontier = [(0, state)]
+	discovered = set([state])
+	parents = {(0, state): None}
+	path = []
+	while len(frontier) != 0:
+		current_state = frontier.pop(0)
+		discovered.add(current_state[1])
+		if IsGoal(current_state[1]):
+			while parents.get((current_state[0], current_state[1])) != None:
+				path.insert(0, current_state[0])
+				current_state = parents.get((current_state[0], current_state[1]))
+			return path
+		for neighbor in ComputeNeighbors(current_state[1]):
+			if neighbor[1] not in discovered:
+				frontier.insert(0, neighbor)
+				discovered.add(neighbor[1])
+				parents.update({(neighbor[0], neighbor[1]): current_state})
+	print("--FAIL--")
+	return None
 
 def BidirectionalSearch(state):
 	Goal = findGoal(len(state))
 	frontier = [(0, state)]
 	frontier2 = [(0, Goal)]
-	discovered = set(state)
-	discovered2 = set(Goal)
-	parents = {(0, state): None}
-	parents2 = {(0, Goal): None}
-	BackState = goal
-	currentStateBackwards = BackState 
-	path = []
+	discovered = set([state])
+	discovered2 = set([Goal])
+	parents = {state: []}
+	parents2 = {Goal: []}
 	while len(frontier) != 0 or len(frontier2) != 0:
 		currentState = frontier.pop(0)
 		currentEndState = frontier2.pop(0)
-		discovered.add(currentState[1])
-		discovered2.add(currentEndState[1])
-		if currentState[1] in discovered2:
-			forwards = BackTrack(parents, currentState)
-			backwards = BackTrack(parents2, currentEndState)
-			return forwards + backwards
-		if currentEndState[1] in discovered:
-			forwards = BackTrack(parents, currentEndState)
-			backwards = BackTrack(parents2, currentState)
-			return forwards + backwards
 
+		discovered.add(tuple(currentState[1]))
+		discovered2.add(tuple(currentEndState[1]))
+
+		intersection = discovered2.intersection(discovered)
+		intersection = list(intersection)
+
+		if len(intersection) > 0:
+			intersectionPoint = intersection[0]
+			forwardPath = parents[intersectionPoint]
+			backwardsPath = list(reversed(parents2[intersectionPoint]))
+			return forwardPath + backwardsPath
+	
+		
 		for neighbor in ComputeNeighbors(currentState[1]):
 			if neighbor[1] not in discovered:
 				frontier.append(neighbor)
 				discovered.add(neighbor[1])
-				parents.update({(neighbor[0], neighbor[1]): currentState})
+				parents.update({neighbor[1]: parents[currentState[1]]+[neighbor[0]]})
 
+
+	
 		for neighbor in ComputeNeighbors(currentEndState[1]):
 			if neighbor[1] not in discovered2:
-				currentStateBackwards.update(frontier2.pop[-1])
 				frontier2.append(neighbor)
 				discovered2.add(neighbor[1])
-				parents.update({(neighbor[0], neighbor[1]): currentEndState})
+				parents2.update({neighbor[1]: parents2[currentEndState[1]]+[neighbor[0]]})
 		
 	print("--FAIL--")
 	return None
 
-def BackTrack(parents, state):
-	path = []
-	key = state
-	while key != None:
-		path.insert(0, key[0])
-		key = parents[key]
-	return path
+
 
 print(BidirectionalSearch(LoadFromFile("testcase.txt")))
+
